@@ -1,0 +1,314 @@
+-- tables
+-- Table: ALQUILER
+CREATE TABLE G13_ALQUILER (
+    id_alquiler int  NOT NULL,
+    id_cliente char(11)  NOT NULL,
+    tipo_alquiler char(10)  NOT NULL,
+    fecha_desde date  NOT NULL,
+    fecha_hasta date  NULL,
+    importe_dia decimal(10,2)  NOT NULL,
+    CONSTRAINT PK_G13_ALQUILER PRIMARY KEY (id_alquiler)
+);
+
+-- Table: ALQUILER_POSICION
+CREATE TABLE G13_ALQUILER_POSICION (
+    id_alquiler int  NOT NULL,
+    id_pos int  NOT NULL,
+    CONSTRAINT PK_G13_ALQUILER_POSICIONES PRIMARY KEY (id_alquiler,id_pos)
+);
+
+-- Table: CLIENTE
+CREATE TABLE G13_CLIENTE (
+    cuit_cuil char(11)  NOT NULL,
+    apellido varchar(60)  NOT NULL,
+    nombre varchar(40)  NOT NULL,
+    fecha_alta date  NOT NULL,
+    saldo decimal(10,2)  NOT NULL,
+    cant_pos_alq smallint  NOT NULL,
+    CONSTRAINT PK_G13_CLIENTE PRIMARY KEY (cuit_cuil)
+);
+
+-- Table: EMPLEADO
+CREATE TABLE G13_EMPLEADO (
+    tipo_doc char(10)  NOT NULL,
+    nro_doc int  NOT NULL,
+    apellido varchar(60)  NOT NULL,
+    nombre varchar(60)  NOT NULL,
+    tel_contacto varchar(15)  NOT NULL,
+    fecha_alta date  NOT NULL,
+    fecha_baja date  NULL,
+    tipo char(15)  NOT NULL,
+    CONSTRAINT PK_G13_EMPLEADO PRIMARY KEY (tipo_doc,nro_doc)
+);
+
+-- Table: ESTANTERIA
+CREATE TABLE G13_ESTANTERIA (
+    nro_estanteria int  NOT NULL,
+    nombre_estanteria varchar(80)  NOT NULL,
+    CONSTRAINT PK_G13_ESTANTERIA PRIMARY KEY (nro_estanteria)
+);
+
+-- Table: FILA
+CREATE TABLE G13_FILA (
+    nro_estanteria int  NOT NULL,
+    nro_fila int  NOT NULL,
+    nombre_fila varchar(80)  NOT NULL,
+    peso_max_kg decimal(10,2)  NOT NULL,
+    CONSTRAINT PK_G13_FILA PRIMARY KEY (nro_estanteria,nro_fila)
+);
+
+-- Table: LINEA_ALQUILER
+CREATE TABLE G13_LINEA_ALQUILER (
+    id_liquidacion int  NOT NULL,
+    id_alquiler int  NOT NULL,
+    id_pos int  NOT NULL,
+    importe decimal(10,2)  NOT NULL,
+    id_mov_cc int  NOT NULL,
+    CONSTRAINT PK_G13_LINEA_ALQUILER PRIMARY KEY (id_liquidacion,id_alquiler,id_pos)
+);
+
+-- Table: MOVIMIENTO
+CREATE TABLE G13_MOVIMIENTO (
+    id_movimiento int  NOT NULL,
+    fecha timestamp  NOT NULL,
+    tipo char(1)  NOT NULL,
+    id_mov_ant int  NULL,
+    id_pos int  NOT NULL,
+    tipo_doc char(10)  NOT NULL,
+    nro_doc int  NOT NULL,
+    cod_pallet varchar(32)  NOT NULL,
+    CONSTRAINT PK_G13_MOVIMIENTO PRIMARY KEY (id_movimiento)
+);
+
+-- Table: MOVIMIENTO_CC
+CREATE TABLE G13_MOVIMIENTO_CC (
+    id_mov_cc int  NOT NULL,
+    fecha date  NOT NULL,
+    cuit_cuil char(11)  NOT NULL,
+    importe decimal(10,2)  NOT NULL,
+    tipo_doc char(10)  NULL,
+    nro_doc int  NULL,
+    CONSTRAINT PK_G13_MOVIMIENTO_CC PRIMARY KEY (id_mov_cc)
+);
+
+-- Table: MOV_ENTRADA
+CREATE TABLE G13_MOV_ENTRADA (
+    id_movimiento int  NOT NULL,
+    transporte varchar(80)  NOT NULL,
+    guia varchar(80)  NOT NULL,
+    CONSTRAINT PK_G13_MOV_ENTRADA PRIMARY KEY (id_movimiento)
+);
+
+-- Table: MOV_INTERNO
+CREATE TABLE G13_MOV_INTERNO (
+    id_movimiento int  NOT NULL,
+    razon varchar(200)  NULL,
+    id_pos int  NOT NULL,
+    CONSTRAINT PK_G13_MOV_INTERNO PRIMARY KEY (id_movimiento)
+);
+
+-- Table: MOV_SALIDA
+CREATE TABLE G13_MOV_SALIDA (
+    id_movimiento int  NOT NULL,
+    transporte varchar(80)  NOT NULL,
+    guia varchar(80)  NOT NULL,
+    CONSTRAINT PK_G13_MOV_SALIDA PRIMARY KEY (id_movimiento)
+);
+
+-- Table: PALLET
+CREATE TABLE G13_PALLET (
+    cod_pallet varchar(32)  NOT NULL,
+    descripcion varchar(200)  NOT NULL,
+    peso decimal(10,2)  NOT NULL,
+    tipo char(10)  NOT NULL,
+    CONSTRAINT PK_G13_PALLET PRIMARY KEY (cod_pallet)
+);
+
+-- Table: POSICION
+CREATE TABLE G13_POSICION (
+    id_pos int  NOT NULL,
+    nro_posicion int  NOT NULL,
+    nro_estanteria int  NOT NULL,
+    nro_fila int  NOT NULL,
+    estado char(12)  NOT NULL,
+    pos_global int  NOT NULL,
+    CONSTRAINT UQ_G13_POSICION_nro_posicion_nro_fila_nro_estanteria UNIQUE (nro_posicion, nro_fila, nro_estanteria) NOT DEFERRABLE  INITIALLY IMMEDIATE,
+    CONSTRAINT PK_G13_POSICION PRIMARY KEY (id_pos)
+);
+                                             
+-- Table: ZONA
+CREATE TABLE G13_ZONA (
+    id_zona int  NOT NULL,
+    descripcion varchar(40)  NOT NULL,
+    tipo char(10)  NOT NULL,
+    CONSTRAINT PK_G13_ZONA PRIMARY KEY (id_zona)
+);
+
+-- Table: ZONA_POSICION
+CREATE TABLE G13_ZONA_POSICION (
+    id_pos int  NOT NULL,
+    fecha date  NOT NULL,
+    id_zona int  NOT NULL,
+    CONSTRAINT PK_G13_ZONA_POSICION PRIMARY KEY (id_pos,fecha)
+);
+
+-- foreign keys
+-- Reference: FK_ALQUILER_CLIENTE (table: ALQUILER)
+ALTER TABLE G13_ALQUILER ADD CONSTRAINT FK_G13_ALQUILER_CLIENTE
+    FOREIGN KEY (id_cliente)
+    REFERENCES G13_CLIENTE (cuit_cuil)  
+    NOT DEFERRABLE 
+    INITIALLY IMMEDIATE
+;
+
+-- Reference: FK_ALQUILER_POSICION_ALQUILER (table: ALQUILER_POSICION)
+ALTER TABLE G13_ALQUILER_POSICION ADD CONSTRAINT FK_G13_ALQUILER_POSICION_ALQUILER
+    FOREIGN KEY (id_alquiler)
+    REFERENCES G13_ALQUILER (id_alquiler)  
+    NOT DEFERRABLE 
+    INITIALLY IMMEDIATE
+;
+
+-- Reference: FK_ALQUILER_POSICION_POSICION (table: ALQUILER_POSICION)
+ALTER TABLE G13_ALQUILER_POSICION ADD CONSTRAINT FK_G13_ALQUILER_POSICION_POSICION
+    FOREIGN KEY (id_pos)
+    REFERENCES G13_POSICION (id_pos)  
+    NOT DEFERRABLE 
+    INITIALLY IMMEDIATE
+;
+
+-- Reference: FK_FILA_ESTANTERIA (table: FILA)
+ALTER TABLE G13_FILA ADD CONSTRAINT FK_G13_FILA_ESTANTERIA
+    FOREIGN KEY (nro_estanteria)
+    REFERENCES G13_ESTANTERIA (nro_estanteria)  
+    NOT DEFERRABLE 
+    INITIALLY IMMEDIATE
+;
+
+-- Reference: FK_LINEA_ALQUILER_ALQUILER_POSICION (table: LINEA_ALQUILER)
+ALTER TABLE G13_LINEA_ALQUILER ADD CONSTRAINT FK_G13_LINEA_ALQUILER_ALQUILER_POSICION
+    FOREIGN KEY (id_alquiler, id_pos)
+    REFERENCES G13_ALQUILER_POSICION (id_alquiler, id_pos)  
+    NOT DEFERRABLE 
+    INITIALLY IMMEDIATE
+;
+
+-- Reference: FK_LINEA_ALQUILER_Movimiento_CC (table: LINEA_ALQUILER)
+ALTER TABLE G13_LINEA_ALQUILER ADD CONSTRAINT FK_G13_LINEA_ALQUILER_Movimiento_CC
+    FOREIGN KEY (id_mov_cc)
+    REFERENCES G13_MOVIMIENTO_CC (id_mov_cc)  
+    NOT DEFERRABLE 
+    INITIALLY IMMEDIATE
+;
+
+-- Reference: FK_MOVIMIENTO_Empleado (table: MOVIMIENTO)
+ALTER TABLE G13_MOVIMIENTO ADD CONSTRAINT FK_G13_MOVIMIENTO_Empleado
+    FOREIGN KEY (tipo_doc, nro_doc)
+    REFERENCES G13_EMPLEADO (tipo_doc, nro_doc)  
+    NOT DEFERRABLE 
+    INITIALLY IMMEDIATE
+;
+
+-- Reference: FK_MOVIMIENTO_INTERNO_POSICION (table: MOV_INTERNO)
+ALTER TABLE G13_MOV_INTERNO ADD CONSTRAINT FK_G13_MOVIMIENTO_INTERNO_POSICION
+    FOREIGN KEY (id_pos)
+    REFERENCES G13_POSICION (id_pos)  
+    NOT DEFERRABLE 
+    INITIALLY IMMEDIATE
+;
+
+-- Reference: FK_MOVIMIENTO_MOVIMIENTO (table: MOVIMIENTO)
+ALTER TABLE G13_MOVIMIENTO ADD CONSTRAINT FK_G13_MOVIMIENTO_MOVIMIENTO
+    FOREIGN KEY (id_mov_ant)
+    REFERENCES G13_MOVIMIENTO (id_movimiento)  
+    NOT DEFERRABLE 
+    INITIALLY IMMEDIATE
+;
+
+-- Reference: FK_MOVIMIENTO_PALLET (table: MOVIMIENTO)
+ALTER TABLE G13_MOVIMIENTO ADD CONSTRAINT FK_G13_MOVIMIENTO_PALLET
+    FOREIGN KEY (cod_pallet)
+    REFERENCES G13_PALLET (cod_pallet)  
+    NOT DEFERRABLE 
+    INITIALLY IMMEDIATE
+;
+
+-- Reference: FK_MOV_ENTRADA_MOVIMIENTO (table: MOV_ENTRADA)
+ALTER TABLE G13_MOV_ENTRADA ADD CONSTRAINT FK_G13_MOV_ENTRADA_MOVIMIENTO
+    FOREIGN KEY (id_movimiento)
+    REFERENCES G13_MOVIMIENTO (id_movimiento)  
+    NOT DEFERRABLE 
+    INITIALLY IMMEDIATE
+;
+
+-- Reference: FK_MOV_INTERNO_MOVIMIENTO (table: MOV_INTERNO)
+ALTER TABLE G13_MOV_INTERNO ADD CONSTRAINT FK_G13_MOV_INTERNO_MOVIMIENTO
+    FOREIGN KEY (id_movimiento)
+    REFERENCES G13_MOVIMIENTO (id_movimiento)  
+    NOT DEFERRABLE 
+    INITIALLY IMMEDIATE
+;
+
+-- Reference: FK_MOV_POSICION (table: MOVIMIENTO)
+ALTER TABLE G13_MOVIMIENTO ADD CONSTRAINT FK_G13_MOV_POSICION
+    FOREIGN KEY (id_pos)
+    REFERENCES G13_POSICION (id_pos)  
+    NOT DEFERRABLE 
+    INITIALLY IMMEDIATE
+;
+
+-- Reference: FK_MOV_SALIDA_MOVIMIENTO (table: MOV_SALIDA)
+ALTER TABLE G13_MOV_SALIDA ADD CONSTRAINT FK_G13_MOV_SALIDA_MOVIMIENTO
+    FOREIGN KEY (id_movimiento)
+    REFERENCES G13_MOVIMIENTO (id_movimiento)  
+    NOT DEFERRABLE 
+    INITIALLY IMMEDIATE
+;
+
+-- Reference: FK_PAGO_CLIENTE (table: MOVIMIENTO_CC)
+ALTER TABLE G13_MOVIMIENTO_CC ADD CONSTRAINT FK_G13_PAGO_CLIENTE
+    FOREIGN KEY (cuit_cuil)
+    REFERENCES G13_CLIENTE (cuit_cuil)  
+    NOT DEFERRABLE 
+    INITIALLY IMMEDIATE
+;
+
+-- Reference: FK_PAGO_EMPLEADO (table: MOVIMIENTO_CC)
+ALTER TABLE G13_MOVIMIENTO_CC ADD CONSTRAINT FK_G13_PAGO_EMPLEADO
+    FOREIGN KEY (tipo_doc, nro_doc)
+    REFERENCES G13_EMPLEADO (tipo_doc, nro_doc)  
+    NOT DEFERRABLE 
+    INITIALLY IMMEDIATE
+;
+
+-- Reference: FK_POSICION_FILA (table: POSICION)
+ALTER TABLE G13_POSICION ADD CONSTRAINT FK_G13_POSICION_FILA
+    FOREIGN KEY (nro_estanteria, nro_fila)
+    REFERENCES G13_FILA (nro_estanteria, nro_fila)  
+    NOT DEFERRABLE 
+    INITIALLY IMMEDIATE
+;
+
+-- Reference: FK_ZONA_POSICION_POSICION (table: ZONA_POSICION)
+ALTER TABLE G13_ZONA_POSICION ADD CONSTRAINT FK_G13_ZONA_POSICION_POSICION
+    FOREIGN KEY (id_pos)
+    REFERENCES G13_POSICION (id_pos)  
+    NOT DEFERRABLE 
+    INITIALLY IMMEDIATE
+;
+
+-- Reference: FK_ZONA_POSICION_ZONA (table: ZONA_POSICION)
+ALTER TABLE G13_ZONA_POSICION ADD CONSTRAINT FK_G13_ZONA_POSICION_ZONA
+    FOREIGN KEY (id_zona)
+    REFERENCES G13_ZONA (id_zona)  
+    NOT DEFERRABLE 
+    INITIALLY IMMEDIATE
+;
+
+CREATE SEQUENCE seq_G13_id_mov_cc AS integer START 100 OWNED BY G13_MOVIMIENTO_CC.id_mov_cc;
+CREATE SEQUENCE seq_G13_id_liquidacion AS integer START 100 OWNED BY G13_LINEA_ALQUILER.id_liquidacion;
+
+ALTER TABLE G13_MOVIMIENTO_CC ALTER COLUMN id_mov_cc SET DEFAULT nextval('seq_G13_id_mov_cc');
+ALTER TABLE G13_LINEA_ALQUILER ALTER COLUMN id_liquidacion SET DEFAULT nextval('seq_G13_id_liquidacion');
+-- End of file.
+
