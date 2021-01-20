@@ -10,6 +10,10 @@ Cuando ingresa un pallet, existe un movimiento de entrada y se le asigna una pos
 El depósito está dividido en zonas, las mismas van cambiando en el tiempo. Cuando se produce un cambio de zona, el sistema debería poder identificar qué pallets cambiaron de zona  y proceder a generar una lista de cambios.
 El sistema debe manejar la cuenta corriente de los clientes, con sus débitos (alquileres) y créditos (pagos). Cada pago tiene un responsable (del lado de la empresa) que es empleado administrativo del área de atención al cliente, no es un empleado del depósito o de otra área.
 
+#Esquema
+<img src="https://raw.githubusercontent.com/osinagalj/TP_dataBase_2019/master/Esquema.png" width="150" height="250" />
+
+#Resoluciones
 
 ## Restricciones
 
@@ -39,4 +43,3 @@ meses, en el caso que corresponda.
 D2.1: Listar todos los datos de las posiciones de la fila número 5 en adelante
 que nunca han sido alquiladas.
 
-<img src="https://raw.githubusercontent.com/osinagalj/TP_dataBase_2019/master/Esquema.png" width="150" height="250" />
