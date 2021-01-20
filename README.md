@@ -38,3 +38,5 @@ meses, en el caso que corresponda.
 
 D2.1: Listar todos los datos de las posiciones de la fila número 5 en adelante
 que nunca han sido alquiladas.
+
+<img src="https://raw.githubusercontent.com/osinagalj/TP_dataBase_2019/master/Esquema.png" width="150" height="250" />
