@@ -11,7 +11,7 @@ El depósito está dividido en zonas, las mismas van cambiando en el tiempo. Cua
 El sistema debe manejar la cuenta corriente de los clientes, con sus débitos (alquileres) y créditos (pagos). Cada pago tiene un responsable (del lado de la empresa) que es empleado administrativo del área de atención al cliente, no es un empleado del depósito o de otra área.
 
 #Esquema
-<img src="https://raw.githubusercontent.com/osinagalj/TP_dataBase_2019/master/Esquema.png" width="150" height="250" />
+<img src="https://raw.githubusercontent.com/osinagalj/TP_dataBase_2019/master/Esquema.png" />
 
 #Resoluciones
 
